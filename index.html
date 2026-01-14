@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Generador de Sensibilidad FF</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #000000, #1a0000);
+      color: #fff;
+    }
+
+    .container {
+      max-width: 420px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ff2b2b;
+    }
+
+    .card {
+      background: #111;
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 10px #000;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+
+    button {
+      background: #ff2b2b;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .result p {
+      margin: 6px 0;
+    }
+
+    .boxes {
+      font-size: 20px;
+      letter-spacing: 3px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Generador de Sensibilidad FF</h1>
+
+    <div class="card">
+      <label>Marca y modelo del celular</label>
+      <input id="device" placeholder="Ej: Xiaomi Redmi Note 14">
+    </div>
+
+    <div class="card">
+      <label>Tipo de sensibilidad</label>
+      <select id="tipo">
+        <option value="baja">Baja</option>
+        <option value="normal">Normal</option>
+        <option value="alta">Alta</option>
+      </select>
+
+      <label>¿Usa DPI?</label>
+      <select id="dpi">
+        <option value="si">Con DPI</option>
+        <option value="no">Sin DPI</option>
+      </select>
+
+      <button onclick="generar()">Generar configuración</button>
+    </div>
+
+    <div class="card result" id="resultado" style="display:none;">
+      <p>🎯 <b>General:</b> <span id="g"></span></p>
+      <p>🔴 <b>Punto rojo:</b> <span id="r"></span></p>
+      <p>2️⃣ <b>Mira 2x:</b> <span id="m2"></span></p>
+      <p>4️⃣ <b>Mira 4x:</b> <span id="m4"></span></p>
+      <p>🥷 <b>Francotirador:</b> <span id="f"></span></p>
+      <p>📷 <b>Cámara:</b> <span id="c"></span></p>
+      <p id="lineaDPI">⚡ <b>DPI:</b> <span id="d"></span></p>
+      <p>🔫 <b>Botón de disparo:</b> <span id="b"></span></p>
+      <p>🚀 <b>Velocidad del puntero:</b></p>
+      <div class="boxes" id="v"></div>
+      <p>⏱️ <b>Tiempo de permanencia:</b> <span id="t"></span></p>
+    </div>
+  </div>
+
+  <script>
+    function rand(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function cuadritos(n) {
+      let s = "";
+      for (let i = 1; i <= 7; i++) {
+        s += i <= n ? "⬛" : "⬜";
+      }
+      return s;
+    }
+
+    function generar() {
+      const tipo = document.getElementById("tipo").value;
+      const dpi = document.getElementById("dpi").value;
+
+      let base =
+        tipo === "baja" ? 120 :
+        tipo === "normal" ? 150 : 180;
+
+      document.getElementById("g").innerText = rand(base, base + 15);
+      document.getElementById("r").innerText = rand(base - 10, base + 10);
+      document.getElementById("m2").innerText = rand(base, base + 20);
+      document.getElementById("m4").innerText = rand(base - 5, base + 15);
+      document.getElementById("f").innerText = rand(15, 30);
+      document.getElementById("c").innerText = rand(3, 8);
+
+      // Mostrar u ocultar DPI según selección
+      if(dpi === "no") {
+        document.getElementById("lineaDPI").style.display = "none";
+      } else {
+        document.getElementById("lineaDPI").style.display = "block";
+        document.getElementById("d").innerText = rand(400, 600);
+      }
+
+      document.getElementById("b").innerText = rand(40, 65);
+      document.getElementById("v").innerText = cuadritos(rand(3, 6));
+      document.getElementById("t").innerText = rand(8, 12) / 10 + "s";
+
+      document.getElementById("resultado").style.display = "block";
+    }
+  </script>
+</body>
+</html>
