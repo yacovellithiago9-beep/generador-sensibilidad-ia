@@ -1,0 +1,170 @@
+<!DOCTYPE html><html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calibrador de Sensibilidad FF</title>
+  <style>
+    body{
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at top, #1b1b1b, #000);
+      color:#fff;
+    }
+    .container{
+      max-width:420px;
+      margin:20px auto;
+      padding:20px;
+      background:#0f0f0f;
+      border-radius:18px;
+      box-shadow:0 0 30px rgba(255,165,0,0.15);
+    }
+    h1{
+      text-align:center;
+      margin-bottom:20px;
+      letter-spacing:1px;
+    }
+    .field{margin-bottom:16px;}
+    label{display:block;margin-bottom:6px;font-size:14px;color:#ddd;}
+    input[type="range"]{width:100%;}
+    input[type="text"], input[type="number"]{
+      width:100%;
+      padding:10px;
+      border-radius:10px;
+      border:none;
+      outline:none;
+      background:#1e1e1e;
+      color:#fff;
+    }
+    .value{float:right;color:#ffa500;}
+    button{
+      width:100%;
+      padding:14px;
+      margin-top:10px;
+      border:none;
+      border-radius:14px;
+      background:linear-gradient(135deg,#ff9800,#ff5722);
+      color:#000;
+      font-size:16px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+    .result{
+      margin-top:18px;
+      padding:14px;
+      background:#1a1a1a;
+      border-radius:14px;
+      font-size:14px;
+      line-height:1.6;
+    }
+    .tag{color:#ffa500;font-weight:bold;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Calibrador FF</h1><!-- Sensibilidades -->
+<div class="field">
+  <label>General <span class="value" id="vGen">0</span></label>
+  <input type="range" min="0" max="200" value="0" id="gen" />
+</div>
+
+<div class="field">
+  <label>Punto Rojo <span class="value" id="vRed">0</span></label>
+  <input type="range" min="0" max="200" value="0" id="red" />
+</div>
+
+<div class="field">
+  <label>Mira 2x <span class="value" id="v2x">0</span></label>
+  <input type="range" min="0" max="200" value="0" id="x2" />
+</div>
+
+<div class="field">
+  <label>Mira 4x <span class="value" id="v4x">0</span></label>
+  <input type="range" min="0" max="200" value="0" id="x4" />
+</div>
+
+<div class="field">
+  <label>AWM <span class="value" id="vAwm">0</span></label>
+  <input type="range" min="0" max="200" value="0" id="awm" />
+</div>
+
+<div class="field">
+  <label>Cámara 360° <span class="value" id="vCam">0</span></label>
+  <input type="range" min="0" max="200" value="0" id="cam" />
+</div>
+
+<!-- Datos del jugador -->
+<div class="field">
+  <label>Modelo del celular</label>
+  <input type="text" id="device" placeholder="Ej: Xiaomi, Samsung, iPhone" />
+</div>
+
+<div class="field">
+  <label>DPI</label>
+  <input type="number" id="dpi" value="400" />
+</div>
+
+<div class="field">
+  <label>Botón de disparo (%)</label>
+  <input type="number" id="fire" value="50" />
+</div>
+
+<button onclick="calibrar()">CALIBRAR SENSIBILIDAD</button>
+<button onclick="generar()">GENERAR SENSIBILIDAD PRO</button>
+
+<div class="result" id="resultado">
+  Completa los datos y presiona un botón 👆
+</div>
+
+  </div>  <script>
+    const sliders = [
+      ['gen','vGen'],['red','vRed'],['x2','v2x'],['x4','v4x'],['awm','vAwm'],['cam','vCam']
+    ];
+
+    sliders.forEach(s=>{
+      const input=document.getElementById(s[0]);
+      const value=document.getElementById(s[1]);
+      input.oninput=()=>value.textContent=input.value;
+    });
+
+    function calibrar(){
+      const dpi = parseInt(dpiEl.value);
+      const fire = parseInt(fireEl.value);
+      const ajuste = Math.round((dpi/10)+(fire/5));
+
+      sliders.forEach(s=>{
+        const el=document.getElementById(s[0]);
+        let nuevo = parseInt(el.value) + ajuste;
+        if(nuevo>200) nuevo=200;
+        el.value = nuevo;
+        document.getElementById(s[1]).textContent=nuevo;
+      });
+
+      resultado.innerHTML = `
+        <span class="tag">Sensibilidad calibrada</span><br>
+        Dispositivo: ${device.value || 'No especificado'}<br>
+        DPI: ${dpi} | Botón: ${fire}%<br>
+        Ajuste aplicado automáticamente 🔥
+      `;
+    }
+
+    function generar(){
+      sliders.forEach(s=>{
+        const el=document.getElementById(s[0]);
+        const rand = Math.floor(Math.random()*60)+120;
+        el.value = rand;
+        document.getElementById(s[1]).textContent=rand;
+      });
+
+      resultado.innerHTML = `
+        <span class="tag">Sensibilidad PRO generada</span><br>
+        Ideal para dar headshots 🎯<br>
+        Probala en entrenamiento y ajustá a tu gusto.
+      `;
+    }
+
+    const dpiEl=document.getElementById('dpi');
+    const fireEl=document.getElementById('fire');
+    const resultado=document.getElementById('resultado');
+    const device=document.getElementById('device');
+  </script></body>
+  </html>
